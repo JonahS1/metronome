@@ -20,6 +20,16 @@ v_tune = 0
 prev_freq = -1
 # sign of tuning voltage (positive will decrease frequency)
 sign = 1
+# string last printed using sys.stdout
+pstr = ''
+
+# function to clear line and print string s
+def clear_print(s):
+    sys.stdout.write('\r' + ' ' * len(pstr))
+    sys.stdout.flush()
+    pstr = '\r' + s
+    sys.stdout.write(pstr)
+    sys.stdout.flush()
 
 # function to find fundamental freq of signal
 def fund(signal):
@@ -62,8 +72,6 @@ def samp(exp):
     # initialize time remaining to total time
     time_remaining = fft_time
 
-    sys.stdout.write('time until next v_tune update: ' + str(time_remaining))
-
     # collect samples
     while(samples < 2**exp):
         # increment time
@@ -82,11 +90,9 @@ def samp(exp):
         # update prev_time
         prev_time = now
 
-        # calculate time remaining
+        # calculate and print time remaining
         time_remaining = round((1 - (samples / 2**exp)) * fft_time)
-
-        sys.stdout.write('\r' + nice_time(time_remaining) + ' until next v_tune update' + '   ')
-        sys.stdout.flush()
+        clear_print(nice_time(time_remaining) + ' until next v_tune update')
 
     return signal
 
@@ -105,11 +111,9 @@ def tune(exp):
     # get frequency offset
     freq = fund(samp(exp))
 
-    # sys.stdout.write('\r' + 'freq: ' + str(csim.freq()) + '\n')
-    # sys.stdout.flush()
+    # clear_print('freq: ' + str(csim.freq()) + '\n')
 
-    sys.stdout.write('\r' + 'offset: ' + str(freq) + '\n')
-    sys.stdout.flush()
+    clear_print('measured frequency offset: ' + str(freq) + ' Hz\n')
 
     # if it's not the first time
     if prev_freq != -1:
@@ -133,9 +137,7 @@ def tune(exp):
 
     cowbell.tune(v_tune)
 
-    sys.stdout.write('\r' + 'tuning voltage: ' + str(v_tune) + '\n')
-    sys.stdout.flush()
-    print('')
+    clear_print('tuning voltage: ' + str(v_tune) + ' V\n\n')
 
     # update previous frequency offset
     prev_freq = freq
