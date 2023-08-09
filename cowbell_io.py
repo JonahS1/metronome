@@ -25,7 +25,6 @@ pow.close()
 
 # set up phase detector
 ph = rm.open_resource('ASRL' + str(PH_COM) + '::INSTR')
-ph.read_termination = '\r\n'
 
 # function to set tuning voltage on power supply
 def tune(v):
@@ -47,19 +46,26 @@ def tune(v):
 def phase():
     # clear all of the measurements it has done since the last one
     ph.clear()
-    # read phase string twice to avoid cutting off beginning
-    ph.read()
-    # wait for next reading to avoid cutting off end
-    time.sleep(0.01)
+    # read phase string
     p = ph.read()
-    # parse and convert to float
-    p = float(p[:-3].strip())
+    # cut out non-numeric characters
+    p = p.strip()[:-3].strip()
+
+    # in case it got a bad reading, keep trying until it succeeds
+    while p == '':
+        p = ph.read().strip()[:-3].strip()
+
     # convert to -180 - 180 deg range and round
-    p = round((p + 180) % 360 - 180, 1)
+    p = round((float(p) + 180) % 360 - 180, 1)
     
     return p
 
 
 if __name__ == "__main__":
     tune(0)
-    print(phase())
+    prev_t = time.time()
+    for i in range(30):
+        print(phase())
+        now = time.time()
+        print(now - prev_t)
+        prev_t = now

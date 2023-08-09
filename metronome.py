@@ -92,7 +92,7 @@ def tune(exp):
     # sys.stdout.write('\r' + 'freq: ' + str(csim.freq()) + '\n')
     # sys.stdout.flush()
 
-    sys.stdout.write('\r' + 'offset: ' + freq + '\n')
+    sys.stdout.write('\r' + 'offset: ' + str(freq) + '\n')
     sys.stdout.flush()
 
     # if it's not the first time
