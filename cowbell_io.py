@@ -46,8 +46,12 @@ def tune(v):
 def phase():
     # clear all of the measurements it has done since the last one
     ph.flush(1)
-    # read phase string
+    # read phase and remove all '\x00's from the beginning
     p = ph.read()
+    while p[0] == '\x00':
+        print('removing x')
+        p = p[1:]
+    
     # cut out non-numeric characters
     p = p.strip()[:-3].strip()
 
