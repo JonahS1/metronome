@@ -3,14 +3,14 @@
 import pyvisa
 import time
 
-# COM ports of power source and phase detector
-POW_COM = 3
-PH_COM = 4
+# resource strings of power source and phase detector
+POW_RESOURCE = 'ASRL3::INSTR'
+PH_RESOURCE = 'ASRL4::INSTR'
 
 rm = pyvisa.ResourceManager('@py')
 
 # set up power supply
-pow = rm.open_resource('ASRL' + str(POW_COM) + '::INSTR')
+pow = rm.open_resource(POW_RESOURCE)
 pow.read_termination = '\r\n'
 # remote operation mode
 pow.write('syst:rem')
@@ -24,7 +24,7 @@ pow.write('outp on')
 pow.close()
 
 # set up phase detector
-ph = rm.open_resource('ASRL' + str(PH_COM) + '::INSTR')
+ph = rm.open_resource(PH_RESOURCE)
 
 # function to set tuning voltage on power supply
 def tune(v):
