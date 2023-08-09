@@ -38,6 +38,14 @@ def fund(signal):
     # return frequency with largest amplitude
     return freqs[transform.argmax()]
 
+# function to convert seconds to minutes and seconds
+def nice_time(s):
+    sec = s % 60
+    min = math.floor(s / 60)
+    output = ('' if min == 0 else str(min) + ' minute' + ('s' if min > 1 else '')) + (', ' if min != 0 and sec != 0 else '') + ('' if sec == 0 else str(sec) + ' second' + ('s' if sec > 1 else '')) + ('0 seconds' if sec == 0 and min == 0 else '')
+    
+    return output
+
 # function to collect 2^exp samples
 def samp(exp):
     # create signal array of length 2**exp
@@ -50,7 +58,7 @@ def samp(exp):
     samp_time = 1/SR
 
     # total time of FFT
-    fft_time = round(2**exp * samp_time / 60, 1)
+    fft_time = round(2**exp * samp_time)
     # initialize time remaining to total time
     time_remaining = fft_time
 
@@ -75,9 +83,9 @@ def samp(exp):
         prev_time = now
 
         # calculate time remaining
-        time_remaining = round((1 - (samples / 2**exp)) * fft_time, 1)
+        time_remaining = round((1 - (samples / 2**exp)) * fft_time)
 
-        sys.stdout.write('\r' + str(time_remaining) + ' minutes until next v_tune update' + '   ')
+        sys.stdout.write('\r' + nice_time(time_remaining) + ' minutes until next v_tune update' + '   ')
         sys.stdout.flush()
 
     return signal
