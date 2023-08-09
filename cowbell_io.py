@@ -7,7 +7,7 @@ import time
 POW_COM = 3
 PH_COM = 4
 
-rm = pyvisa.ResourceManager()
+rm = pyvisa.ResourceManager('@py')
 
 # set up power supply
 pow = rm.open_resource('ASRL' + str(POW_COM) + '::INSTR')
@@ -45,7 +45,7 @@ def tune(v):
 # function to read phase difference between ULN and reference
 def phase():
     # clear all of the measurements it has done since the last one
-    ph.clear()
+    ph.flush(1)
     # read phase string
     p = ph.read()
     # cut out non-numeric characters
@@ -63,9 +63,8 @@ def phase():
 
 if __name__ == "__main__":
     tune(0)
-    prev_t = time.time()
-    for i in range(30):
+    for i in range(1):
+        t1 = time.time()
         print(phase())
-        now = time.time()
-        print(now - prev_t)
-        prev_t = now
+        print(time.time() - t1)
+        
