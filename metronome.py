@@ -25,8 +25,12 @@ pstr = ''
 
 # function to clear line and print string s
 def clear_print(s):
+    global pstr
+
+    # clear previous line
     sys.stdout.write('\r' + ' ' * len(pstr))
     sys.stdout.flush()
+    # update pstr and print new line
     pstr = '\r' + s
     sys.stdout.write(pstr)
     sys.stdout.flush()
