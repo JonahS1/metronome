@@ -85,7 +85,7 @@ def samp(exp):
         # calculate time remaining
         time_remaining = round((1 - (samples / 2**exp)) * fft_time)
 
-        sys.stdout.write('\r' + nice_time(time_remaining) + ' minutes until next v_tune update' + '   ')
+        sys.stdout.write('\r' + nice_time(time_remaining) + ' until next v_tune update' + '   ')
         sys.stdout.flush()
 
     return signal
