@@ -4,8 +4,8 @@ import pyvisa
 import time
 
 # resource strings of power source and phase detector
-POW_RESOURCE = 'ASRL3::INSTR'
-PH_RESOURCE = 'ASRL4::INSTR'
+POW_RESOURCE = 'ASRL/dev/ttyUSB0::INSTR'
+PH_RESOURCE = 'ASRL/dev/ttyUSB1::INSTR'
 
 rm = pyvisa.ResourceManager('@py')
 
