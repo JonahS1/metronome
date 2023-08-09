@@ -49,7 +49,12 @@ def samp(exp):
     # sample time
     samp_time = 1/SR
 
-    sys.stdout.write('0%')
+    # total time of FFT
+    fft_time = round(2**exp * samp_time / 60, 1)
+    # initialize time remaining to total time
+    time_remaining = fft_time
+
+    sys.stdout.write('time until next v_tune update: ' + str(time_remaining))
 
     # collect samples
     while(samples < 2**exp):
@@ -69,7 +74,10 @@ def samp(exp):
         # update prev_time
         prev_time = now
 
-        sys.stdout.write('\r' + str(round(10000 * samples / 2**exp) / 100) + '%' + '  ')
+        # calculate time remaining
+        time_remaining = round((1 - (samples / 2**exp)) * fft_time, 1)
+
+        sys.stdout.write('\r' + str(time_remaining) + ' minutes until next v_tune update' + '   ')
         sys.stdout.flush()
 
     return signal
